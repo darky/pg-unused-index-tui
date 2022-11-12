@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nbb --classpath \"src\" nrepl-server",
-    "start": "nbb --classpath \"src\" src/index.cljs",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nbb --classpath \"src\" src/index.cljs"
   },
   "keywords": [
     "pg",
