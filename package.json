@@ -1,10 +1,10 @@
 {
   "name": "pg-unused-index-tui",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "TUI for finding Postgres unused indexes",
   "main": "index.js",
   "scripts": {
-    "dev": "nbb nrepl-server",
+    "dev": "nbb --classpath \"src\" nrepl-server",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -19,6 +19,7 @@
   "dependencies": {
     "ink": "3.2.0",
     "ink-big-text": "1.2.0",
+    "ink-table": "3.0.0",
     "ink-text-input": "4.0.3",
     "nbb": "1.0.142",
     "pg": "8.8.0",
