@@ -1,7 +1,7 @@
 (ns connection
   (:require ["pg$default" :as pg]
             ["pg-connection-string$default" :as pg-url-parser]
-            ["ink$default" :refer [Box Text]]
+            ["ink$default" :refer [Box Text render]]
             ["ink-text-input$default" :refer [UncontrolledTextInput]]
             [reagent.core :as r]
             ["ink-big-text$default" :as Bigtext]
@@ -26,7 +26,7 @@
 (defn Connection []
   [:> Box {:flex-direction "column"}
    [:> Box
-    [:> Bigtext {:text "PG UNUSED INDEXES"}]]
+    [:> Bigtext {:text "PG UNUSED INDEX"}]]
    [:> Box
     [:> Box
      [:> Text "Please connect to database via Postgres URL: "]]
@@ -34,3 +34,6 @@
      [:> UncontrolledTextInput {:on-submit connect-to-pg}]]]
    [:> Box
     [:> Text {:color "red"} (j/get @conn-err :message)]]])
+
+
+(defn render-connection [] (render (r/as-element [Connection])))

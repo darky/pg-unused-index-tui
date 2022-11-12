@@ -1,8 +1,5 @@
 (ns index
   (:require
-   ["ink$default" :refer [render]]
-   [reagent.core :as r]
-   [connection :refer [Connection]]))
+   [connection :refer [render-connection]]))
 
-
-(render (r/as-element [Connection]))
+(render-connection)
