@@ -1,6 +1,6 @@
 {
   "name": "pg-unused-index-tui",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "TUI for showing unused indexes of Postgres",
   "main": "src/index.cljs",
   "repository": {
@@ -11,7 +11,7 @@
     "src"
   ],
   "bin": {
-    "pg-unused-index-tui": "npm run start"
+    "pg-unused-index-tui": "./run.sh"
   },
   "scripts": {
     "dev": "nbb --classpath \"src\" nrepl-server",
