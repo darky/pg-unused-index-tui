@@ -1,8 +1,12 @@
 {
   "name": "pg-unused-index-tui",
   "version": "0.3.0",
-  "description": "TUI for finding Postgres unused indexes",
+  "description": "TUI for showing unused indexes of Postgres",
   "main": "src/index.cljs",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/darky/pg-unused-index-tui.git"
+  },
   "files": [
     "src"
   ],
