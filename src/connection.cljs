@@ -23,7 +23,7 @@
    (.catch #(reset! conn-err %))))
 
 
-(defn Connection []
+(defn Connection [url]
   [:> Box {:flex-direction "column"}
    [:> Box
     [:> Bigtext {:text "PG UNUSED INDEX"}]]
@@ -31,9 +31,9 @@
     [:> Box
      [:> Text "Please connect to database via Postgres URL: "]]
     [:> Box
-     [:> UncontrolledTextInput {:on-submit connect-to-pg}]]]
+     [:> UncontrolledTextInput {:on-submit connect-to-pg :initial-value url}]]]
    [:> Box
     [:> Text {:color "red"} (j/get @conn-err :message)]]])
 
 
-(defn render-connection [] (render (r/as-element [Connection])))
+(defn render-connection [url] (render (r/as-element [Connection url])))

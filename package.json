@@ -1,6 +1,6 @@
 {
   "name": "pg-unused-index-tui",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "TUI for finding Postgres unused indexes",
   "main": "index.js",
   "scripts": {
