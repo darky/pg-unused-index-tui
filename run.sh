@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-npm run start
+npm run start $1
