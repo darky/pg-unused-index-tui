@@ -16,13 +16,12 @@
 (defn- connect-to-pg [url]
   (->
    (js/Promise. #(% (pg/Client. (pg-url-parser/parse url))))
-   (.then (fn [client]
-            (-> (js/Promise. #(%))
-                (.then (.connect client))
-                (.then #(reset! pg-connection client))
-                (.then #(fetch-indexes))
-                (.then #(reset! conn-err nil)))))
+   (.then #(reset! pg-connection %))
+   (.then #(.connect %))
+   (.then #(fetch-indexes))
+   (.then #(reset! conn-err nil))
    (.catch #(reset! conn-err %))))
+
 
 (defn Connection []
   [:> Box {:flex-direction "column"}
