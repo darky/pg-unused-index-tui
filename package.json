@@ -1,0 +1,27 @@
+{
+  "name": "pg-unused-index-tui",
+  "version": "0.1.0",
+  "description": "TUI for finding Postgres unused indexes",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nbb nrepl-server",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "pg",
+    "postgres",
+    "unused",
+    "index",
+    "tui"
+  ],
+  "author": "Vladislav Botvin",
+  "license": "MIT",
+  "dependencies": {
+    "ink": "3.2.0",
+    "ink-big-text": "1.2.0",
+    "ink-text-input": "4.0.3",
+    "nbb": "1.0.142",
+    "pg": "8.8.0",
+    "pg-connection-string": "2.5.0"
+  }
+}
