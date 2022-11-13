@@ -1,6 +1,6 @@
 (ns indexes
   (:require
-   ["ink$default" :refer [render Text]]
+   ["ink$default" :refer [render Text Box useInput Newline]]
    ["ink-table$default" :as Table]
    [reagent.core :as r]
    [global :refer [pg-connection]]))
@@ -9,13 +9,10 @@
 (defonce ^:private unused-indexes (r/atom []))
 
 
-(defn- Indexes []
-  (if (> (count @unused-indexes) 0)
-    [:> Table/default {:data @unused-indexes}]
-    [:> Text "No info about indexes"]))
+(declare Indexes)
 
 
-(defn fetch-indexes []
+(defn show-index-stats []
   (-> (.query @pg-connection "
 SELECT
   idstat.relname AS TABLE_NAME,
@@ -42,4 +39,25 @@ ORDER BY
     pg_relation_size(indexrelid) DESC
                           ")
       (.then #(reset! unused-indexes (.-rows %)))
-      (.then #(render (r/as-element [Indexes])))))
+      (.then #(render (r/as-element [:f> Indexes])))))
+
+
+(defn- refresh-index-stats []
+  (->
+   (.query @pg-connection "SELECT pg_stat_reset()")
+   (.then #(show-index-stats))))
+
+
+(defn- Indexes []
+  (useInput (fn [input]
+              (if (= input "r") (show-index-stats))
+              (if (= input "c") (refresh-index-stats))))
+  (if (> (count @unused-indexes) 0)
+    [:> Box {:flex-direction "column"}
+     [:> Box {:border-style "single"}
+      [:> Text
+       [:> Text "Press \"R\", if you want refresh statistics"]
+       [:> Newline]
+       [:> Text "Press \"C\", if you want clear statistics"]]]
+     [:> Table/default {:data @unused-indexes}]]
+    [:> Text "No info about indexes"]))

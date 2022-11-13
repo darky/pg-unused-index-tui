@@ -6,7 +6,7 @@
             [reagent.core :as r]
             ["ink-big-text$default" :as Bigtext]
             [applied-science.js-interop :as j]
-            [indexes :refer [fetch-indexes]]
+            [indexes :refer [show-index-stats]]
             [global :refer [pg-connection]]))
 
 
@@ -18,12 +18,12 @@
    (js/Promise. #(% (pg/Client. (pg-url-parser/parse url))))
    (.then #(reset! pg-connection %))
    (.then #(.connect %))
-   (.then #(fetch-indexes))
+   (.then #(show-index-stats))
    (.then #(reset! conn-err nil))
    (.catch #(reset! conn-err %))))
 
 
-(defn Connection [url]
+(defn- Connection [url]
   [:> Box {:flex-direction "column"}
    [:> Box
     [:> Bigtext {:text "PG UNUSED INDEX"}]]
