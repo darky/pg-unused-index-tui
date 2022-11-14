@@ -31,8 +31,9 @@
     "ink-big-text": "^1.2.0",
     "ink-table": "^3.0.0",
     "ink-text-input": "^4.0.3",
-    "nbb": "^1.0.142",
+    "nbb": "^1.0.144",
     "pg": "^8.8.0",
-    "pg-connection-string": "^2.5.0"
+    "pg-connection-string": "^2.5.0",
+    "rocket-pipes-slim": "^0.10.3"
   }
 }

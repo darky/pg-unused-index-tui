@@ -3,7 +3,8 @@
    ["ink$default" :refer [render Text Box useInput Newline]]
    ["ink-table$default" :as Table]
    [reagent.core :as r]
-   [global :refer [pg-connection]]))
+   [global :refer [pg-connection]]
+   ["rocket-pipes-slim" :as pipe]))
 
 
 (defonce ^:private unused-indexes (r/atom []))
@@ -12,8 +13,9 @@
 (declare Indexes)
 
 
-(defn show-index-stats []
-  (-> (.query @pg-connection "
+(def show-index-stats
+  (pipe/p
+   #(.query @pg-connection "
 SELECT
   idstat.relname AS TABLE_NAME,
   indexrelname AS index_name,
@@ -38,14 +40,14 @@ ORDER BY
     idstat.idx_scan DESC,
     pg_relation_size(indexrelid) DESC
                           ")
-      (.then #(reset! unused-indexes (.-rows %)))
-      (.then #(render (r/as-element [:f> Indexes])))))
+   #(reset! unused-indexes (.-rows %))
+   #(render (r/as-element [:f> Indexes]))))
 
 
-(defn- refresh-index-stats []
-  (->
-   (.query @pg-connection "SELECT pg_stat_reset()")
-   (.then #(show-index-stats))))
+(def ^:private refresh-index-stats
+  (pipe/p
+   #(.query @pg-connection "SELECT pg_stat_reset()")
+   #(show-index-stats)))
 
 
 (defn- Indexes []

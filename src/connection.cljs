@@ -7,20 +7,20 @@
             ["ink-big-text$default" :as Bigtext]
             [applied-science.js-interop :as j]
             [indexes :refer [show-index-stats]]
-            [global :refer [pg-connection]]))
+            [global :refer [pg-connection]]
+            ["rocket-pipes-slim" :as pipe]))
 
 
 (defonce ^:private conn-err (r/atom nil))
 
 
-(defn- connect-to-pg [url]
-  (->
-   (js/Promise. #(% (pg/Client. (pg-url-parser/parse url))))
-   (.then #(reset! pg-connection %))
-   (.then #(.connect %))
-   (.then #(show-index-stats))
-   (.then #(reset! conn-err nil))
-   (.catch #(reset! conn-err %))))
+(def ^:private connect-to-pg
+  (pipe/p
+   #(pg/Client. (pg-url-parser/parse %))
+   #(reset! pg-connection %)
+   #(.connect %)
+   #(show-index-stats)
+   #(reset! conn-err nil)))
 
 
 (defn- Connection [url]
@@ -31,7 +31,13 @@
     [:> Box
      [:> Text "Please connect to database via Postgres URL: "]]
     [:> Box
-     [:> UncontrolledTextInput {:on-submit connect-to-pg :initial-value url}]]]
+     [:> UncontrolledTextInput
+      {:on-submit
+       (fn [url]
+         (->
+          (connect-to-pg url)
+          (.catch #(reset! conn-err %))))
+       :initial-value url}]]]
    [:> Box
     [:> Text {:color "red"} (j/get @conn-err :message)]]])
 
