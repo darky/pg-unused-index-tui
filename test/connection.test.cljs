@@ -5,14 +5,15 @@
             ["rocket-pipes-slim" :as pipe]
             [clojure.string :as s]
             [global :refer [pg-connection]]
-            [connection :refer [connect-to-pg Connection conn-err]]
+            [connection :refer [connect-to-pg Connection conn-err on-submit]]
             [indexes :refer [show-index-stats]]
             [reagent.core :as r]))
 
 
 (uvu/test
  "basic render connection"
- (fn [] (let [rend (ink/render (r/as-element [Connection]))]
+ (fn [] (let [rend (ink/render
+                    (r/as-element [Connection]))]
           ((pipe/p
             #(js->clj rend)
             #((get % "lastFrame"))
@@ -53,15 +54,15 @@
             #(ok (not (nil? @pg-connection)) "pg-connection atom not mutated"))))))
 
 
-(uvu/test.skip
+(uvu/test
  "show-index-stats should be called on db connection"
  (fn [] (let [val (atom 0)]
           (with-redefs
-           [show-index-stats #(inc @val)
+           [show-index-stats (.replace show-index-stats #js [[0 #(swap! val inc)] [1 #()] [2 #()]])
             connect-to-pg (.replace connect-to-pg #js [[2 #()] [3 #(show-index-stats)]])]
             ((pipe/p
               #(connect-to-pg "")
-              #(is @val 1)))))))
+              #(is @val 1 "show-index-stats not called")))))))
 
 
 (uvu/test
@@ -72,6 +73,17 @@
             #(reset! conn-err {:message "err"})
             #(connect-to-pg "")
             #(ok (nil? @conn-err) "conn-err atom not reset"))))))
+
+
+(uvu/test
+ "set conn-err atom on DB connection error"
+ (fn []
+   (with-redefs
+    [connect-to-pg (.replace connect-to-pg #js [[2 #(throw {:message "test err"})] [3 #()]])]
+     ((pipe/p
+       #(reset! conn-err nil)
+       #(on-submit "test")
+       #(ok (not (nil? @conn-err)) "conn-err atom not mutated"))))))
 
 
 (uvu/test.run)

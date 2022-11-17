@@ -23,6 +23,12 @@
    #(reset! conn-err nil)))
 
 
+(defn- on-submit [url]
+  (->
+   (connect-to-pg url)
+   (.catch #(reset! conn-err %))))
+
+
 (defn- Connection [url]
   [:> Box {:flex-direction "column"}
    [:> Box
@@ -32,11 +38,7 @@
      [:> Text "Please connect to database via Postgres URL: "]]
     [:> Box
      [:> UncontrolledTextInput
-      {:on-submit
-       (fn [url]
-         (->
-          (connect-to-pg url)
-          (.catch #(reset! conn-err %))))
+      {:on-submit on-submit
        :initial-value url}]]]
    [:> Box
     [:> Text {:color "red"} (j/get @conn-err :message)]]])
