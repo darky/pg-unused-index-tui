@@ -1,4 +1,4 @@
-(ns index
+(ns main
   (:require
    [connection :refer [render-connection]]))
 

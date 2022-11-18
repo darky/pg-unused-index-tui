@@ -15,7 +15,7 @@
   },
   "scripts": {
     "dev": "nbb --classpath \"src\" nrepl-server",
-    "start": "nbb --classpath \"src\" src/index.cljs",
+    "start": "nbb --classpath \"src\" src/main.cljs",
     "test": "nbb --classpath \"src:test\" test/*"
   },
   "keywords": [
