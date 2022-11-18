@@ -16,7 +16,7 @@
   "scripts": {
     "dev": "nbb --classpath \"src\" nrepl-server",
     "start": "nbb --classpath \"src\" src/main.cljs",
-    "test": "nbb --classpath \"src:test\" test/*"
+    "test": "./test/test.sh"
   },
   "keywords": [
     "pg",
