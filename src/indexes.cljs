@@ -4,10 +4,11 @@
    ["ink-table$default" :as Table]
    [reagent.core :as r]
    [global :refer [pg-connection]]
-   ["rocket-pipes-slim" :as pipe]))
+   ["rocket-pipes-slim" :as pipe]
+   [clojure.string :as s]))
 
 
-(defonce ^:private unused-indexes (r/atom []))
+(defonce ^:private index-stats (r/atom []))
 
 
 (declare Indexes)
@@ -40,7 +41,7 @@ ORDER BY
     idstat.idx_scan DESC,
     pg_relation_size(indexrelid) DESC
                           ")
-   #(reset! unused-indexes (.-rows %))
+   #(reset! index-stats (.-rows %))
    #(render (r/as-element [:f> Indexes]))))
 
 
@@ -51,15 +52,15 @@ ORDER BY
 
 
 (defn- Indexes []
-  (useInput (fn [input]
-              (if (= input "r") (show-index-stats))
-              (if (= input "c") (refresh-index-stats))))
-  (if (> (count @unused-indexes) 0)
+  (useInput (fn [input key]
+              (if (= (s/lower-case input) "r") (show-index-stats))
+              (if (and (= (s/lower-case input) "c") (.-shift key)) (refresh-index-stats))))
+  (if (> (count @index-stats) 0)
     [:> Box {:flex-direction "column"}
      [:> Box {:border-style "single"}
       [:> Text
        [:> Text "Press \"R\", if you want refresh statistics"]
        [:> Newline]
-       [:> Text "Press \"C\", if you want clear statistics"]]]
-     [:> Table/default {:data @unused-indexes}]]
+       [:> Text "Press \"Shift+C\" (\"Caps Lock\" should be turned off), if you want clear statistics"]]]
+     [:> Table/default {:data @index-stats}]]
     [:> Text "No info about indexes"]))

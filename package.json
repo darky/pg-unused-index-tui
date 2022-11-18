@@ -1,6 +1,6 @@
 {
   "name": "pg-unused-index-tui",
-  "version": "1.0.0",
+  "version": "1.0.6",
   "description": "TUI for showing unused indexes of Postgres",
   "main": "src/index.cljs",
   "repository": {
