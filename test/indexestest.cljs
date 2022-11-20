@@ -16,22 +16,22 @@
 
 (uvu/test
  "show-index-stats should mutate @index-stats"
- (fn [] (with-redefs
-         [show-index-stats (.replace show-index-stats #js [[0 #(identity #js {"rows" [{:foo "bar"}]})] [2 #()]])]
-          ((pipe/p
-            #(reset! index-stats nil)
-            #(show-index-stats)
-            #(ok (not (nil? @index-stats)) "@index-stats not mutated"))))))
+ (fn []
+   (.replace show-index-stats #js [[0 #(identity #js {"rows" [{:foo "bar"}]})] [2 #()]])
+   ((pipe/p
+     #(reset! index-stats nil)
+     #(show-index-stats)
+     #(ok (not (nil? @index-stats)) "@index-stats not mutated")))))
 
 
 (uvu/test
  "refresh-index-stats should call show-index-stats"
- (fn [] (let [val (atom 0)] (with-redefs
-                             [refresh-index-stats (.replace refresh-index-stats #js [[0 #()]])]
-                              [show-index-stats (.replace show-index-stats #js [[0 #(identity #js {"rows" [{:foo "bar"}]})] [2 #(swap! val inc)]])]
-                              ((pipe/p
-                                #(refresh-index-stats)
-                                #(ok (= @val 1) "show-index-stats not called on refresh-index-stats")))))))
+ (fn [] (let [val (atom 0)]
+          (.replace refresh-index-stats #js [[0 #()]])
+          (.replace show-index-stats #js [[0 #(identity #js {"rows" [{:foo "bar"}]})] [2 #(swap! val inc)]])
+          ((pipe/p
+            #(refresh-index-stats)
+            #(ok (= @val 1) "show-index-stats not called on refresh-index-stats"))))))
 
 
 (uvu/test
