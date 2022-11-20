@@ -1,4 +1,4 @@
-(ns indexes.test
+(ns indexestest
   (:require ["uvu" :as uvu]
             ["uvu/assert" :refer [ok]]
             ["ink-testing-library$default" :as ink]
@@ -6,6 +6,12 @@
             [clojure.string :as s]
             [indexes :refer [show-index-stats index-stats refresh-index-stats Indexes]]
             [reagent.core :as r]))
+
+
+(uvu/test.before.each
+ (fn []
+   (.replaceUndo refresh-index-stats)
+   (.replaceUndo show-index-stats)))
 
 
 (uvu/test
@@ -52,6 +58,3 @@
        #(s/includes?
          % "test check")
        #(ok % "Can't render indexes table"))))))
-
-
-(uvu/test.run)

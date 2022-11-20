@@ -16,7 +16,7 @@
   "scripts": {
     "dev": "nbb --classpath \"src\" nrepl-server",
     "start": "nbb --classpath \"src\" src/main.cljs",
-    "test": "./test/test.sh"
+    "test": "nbb --classpath \"src:test\" test/maintest.cljs"
   },
   "keywords": [
     "pg",
@@ -35,7 +35,7 @@
     "nbb": "^1.0.144",
     "pg": "^8.8.0",
     "pg-connection-string": "^2.5.0",
-    "rocket-pipes-slim": "^0.10.3"
+    "rocket-pipes-slim": "^0.11.0"
   },
   "devDependencies": {
     "ink-testing-library": "2.1.0",

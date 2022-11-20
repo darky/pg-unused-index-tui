@@ -1,4 +1,4 @@
-(ns connection.test
+(ns connectiontest
   (:require ["uvu" :as uvu]
             ["uvu/assert" :refer [ok is]]
             ["ink-testing-library$default" :as ink]
@@ -8,6 +8,12 @@
             [connection :refer [connect-to-pg Connection conn-err on-submit]]
             [indexes :refer [show-index-stats]]
             [reagent.core :as r]))
+
+
+(uvu/test.before.each
+ (fn []
+   (.replaceUndo connect-to-pg)
+   (.replaceUndo show-index-stats)))
 
 
 (uvu/test
@@ -84,6 +90,3 @@
        #(reset! conn-err nil)
        #(on-submit "test")
        #(ok (not (nil? @conn-err)) "conn-err atom not mutated"))))))
-
-
-(uvu/test.run)
