@@ -26,35 +26,34 @@
 
 (uvu/test
  "refresh-index-stats should call show-index-stats"
- (fn [] (let [val (atom 0)]
-          (.replace refresh-index-stats #js [[0 #()]])
-          (.replace show-index-stats #js [[0 #(identity #js {"rows" [{:foo "bar"}]})] [2 #(swap! val inc)]])
-          ((pipe/p
-            #(refresh-index-stats)
-            #(ok (= @val 1) "show-index-stats not called on refresh-index-stats"))))))
+ (fn []
+   (let [val (atom 0)]
+     (.replace refresh-index-stats #js [[0 #()]])
+     (.replace show-index-stats #js [[0 #(identity #js {"rows" [{:foo "bar"}]})] [2 #(swap! val inc)]])
+     ((pipe/p
+       #(refresh-index-stats)
+       #(ok (= @val 1) "show-index-stats not called on refresh-index-stats"))))))
 
 
 (uvu/test
  "should render empty indexes"
  (fn []
    (reset! index-stats [])
-   (let [rend (ink/render (r/as-element [:f> Indexes]))
-         rend-clj (js->clj rend)]
-     ((pipe/p
-       #((get rend-clj "lastFrame"))
-       #(s/includes?
-         % "No info about indexes")
-       #(ok % "Can't render empty indexes"))))))
+   ((pipe/p
+     #(ink/render (r/as-element [:f> Indexes]))
+     #(.lastFrame %)
+     #(s/includes?
+       % "No info about indexes")
+     #(ok % "Can't render empty indexes")))))
 
 
 (uvu/test
  "should render indexes table"
  (fn []
    (reset! index-stats [{:key "test check"}])
-   (let [rend (ink/render (r/as-element [:f> Indexes]))
-         rend-clj (js->clj rend)]
-     ((pipe/p
-       #((get rend-clj "lastFrame"))
-       #(s/includes?
-         % "test check")
-       #(ok % "Can't render indexes table"))))))
+   ((pipe/p
+     #(ink/render (r/as-element [:f> Indexes]))
+     #(.lastFrame %)
+     #(s/includes?
+       % "test check")
+     #(ok % "Can't render indexes table")))))
