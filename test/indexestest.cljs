@@ -5,7 +5,8 @@
             ["rocket-pipes-slim" :as pipe]
             [clojure.string :as s]
             [indexes :refer [show-index-stats index-stats refresh-index-stats Indexes]]
-            [reagent.core :as r]))
+            [reagent.core :as r]
+            ["timers/promises" :refer [setTimeout]]))
 
 
 (uvu/test.before.each
@@ -57,3 +58,35 @@
      #(s/includes?
        % "test check")
      #(ok % "Can't render indexes table")))))
+
+
+(uvu/test
+ "should call show-index-stats on press r"
+ (fn []
+   (let [val (atom 0)]
+     (.replace show-index-stats #js [[0 #(swap! val inc)] [1 #()] [2 #()]])
+     ((pipe/p
+       #(ink/render (r/as-element [:f> Indexes]))
+       #(.-stdin %)
+       (fn [stdin]
+         ((pipe/p
+           #(setTimeout 1)
+           #(.write stdin "r")
+           #(setTimeout 1))))
+       #(ok (= @val 1) "Can't call show-index-stats on press r"))))))
+
+
+(uvu/test
+ "should call refresh-index-stats on press Shift+C"
+ (fn []
+   (let [val (atom 0)]
+     (.replace refresh-index-stats #js [[0 #(swap! val inc)] [1 #()]])
+     ((pipe/p
+       #(ink/render (r/as-element [:f> Indexes]))
+       #(.-stdin %)
+       (fn [stdin]
+         ((pipe/p
+           #(setTimeout 1)
+           #(.write stdin "C")
+           #(setTimeout 1))))
+       #(ok (= @val 1) "Can't call refresh-index-stats on press Shift+C"))))))

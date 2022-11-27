@@ -56,7 +56,7 @@
    (.replace connect-to-pg #js [[2 #()] [3 #()]])
    ((pipe/p
      #(connect-to-pg "")
-     #(ok (not (nil? @pg-connection)) "pg-connection atom not mutated")))))
+     #(ok (not (nil? @pg-connection)) "@pg-connection not mutated")))))
 
 
 (uvu/test
@@ -77,7 +77,7 @@
    ((pipe/p
      #(reset! conn-err {:message "err"})
      #(connect-to-pg "")
-     #(ok (nil? @conn-err) "conn-err atom not reset")))))
+     #(ok (nil? @conn-err) "@conn-err not reset")))))
 
 
 (uvu/test
@@ -87,7 +87,7 @@
    ((pipe/p
      #(reset! conn-err nil)
      #(on-submit "test")
-     #(ok (not (nil? @conn-err)) "conn-err atom not mutated")))))
+     #(ok (not (nil? @conn-err)) "@conn-err not mutated")))))
 
 
 (uvu/test
@@ -111,7 +111,7 @@
    (let [url (atom nil)]
      (.replace connect-to-pg #js [[0 #(reset! url %)] [2 #()] [3 #()]])
      ((pipe/p
-       #(ink/render (r/as-element [:f> Connection]))
+       #(ink/render (r/as-element [Connection]))
        #(.-stdin %)
        (fn [stdin]
          ((pipe/p
