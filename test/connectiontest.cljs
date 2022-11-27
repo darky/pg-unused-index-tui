@@ -7,7 +7,8 @@
             [global :refer [pg-connection]]
             [connection :refer [connect-to-pg Connection conn-err on-submit]]
             [indexes :refer [show-index-stats]]
-            [reagent.core :as r]))
+            [reagent.core :as r]
+            ["timers/promises" :refer [setTimeout]]))
 
 
 (uvu/test.before.each
@@ -87,3 +88,35 @@
      #(reset! conn-err nil)
      #(on-submit "test")
      #(ok (not (nil? @conn-err)) "conn-err atom not mutated")))))
+
+
+(uvu/test
+ "render passed connection url"
+ (fn []
+   ((pipe/p
+     #(ink/render (r/as-element [Connection]))
+     (fn [rend]
+       ((pipe/p
+         #(.-stdin rend)
+         #(.write % "test url")
+         #(.lastFrame rend))))
+     #(s/includes?
+       % "test url")
+     #(ok % "can't render passed url")))))
+
+
+(uvu/test
+ "call on-submit with url when press Enter"
+ (fn []
+   (let [url (atom nil)]
+     (.replace connect-to-pg #js [[0 #(reset! url %)] [2 #()] [3 #()]])
+     ((pipe/p
+       #(ink/render (r/as-element [:f> Connection]))
+       #(.-stdin %)
+       (fn [stdin]
+         ((pipe/p
+           #(setTimeout 1)
+           #(.write stdin "test url")
+           #(setTimeout 1)
+           #(.write stdin "\r"))))
+       #(ok (= @url "test url") "can't submit url"))))))
