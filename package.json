@@ -2,7 +2,7 @@
   "name": "pg-unused-index-tui",
   "version": "1.0.9",
   "description": "TUI for showing unused indexes of Postgres",
-  "main": "src/index.cljs",
+  "main": "src/main.cljs",
   "repository": {
     "type": "git",
     "url": "git://github.com/darky/pg-unused-index-tui.git"
@@ -11,11 +11,11 @@
     "src"
   ],
   "bin": {
-    "pg-unused-index-tui": "./run.sh"
+    "pg-unused-index-tui": "./src/main.cljs"
   },
   "scripts": {
     "dev": "nbb --classpath \"src\" nrepl-server",
-    "start": "nbb --classpath \"src\" src/main.cljs",
+    "start": "./src/main.cljs",
     "test": "nbb --classpath \"src:test\" test/maintest.cljs"
   },
   "keywords": [

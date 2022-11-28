@@ -1,3 +1,5 @@
+#!/usr/bin/env -S nbb --classpath "src"
+
 (ns main
   (:require
    [connection :refer [render-connection]]))
